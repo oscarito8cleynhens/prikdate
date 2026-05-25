@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrikDate — Plan je zomer samen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#FFF9EE;
+  --surface:#FFFFFF;
+  --surface2:#FFF3D6;
+  --surface3:#FFE8B0;
+  --accent:#FF6B35;
+  --accent2:#FFB830;
+  --teal:#00C9A7;
+  --sky:#4FC3F7;
+  --text:#2D2416;
+  --muted:#9C8B6E;
+  --border:#FFD98A;
+  --green:#00C9A7;
+  --r:18px;--rs:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* HERO */
+.hero{
+  background:linear-gradient(160deg,#FFD93D 0%,#FF6B35 50%,#FF8E53 100%);
+  padding:2rem 1.5rem 3.5rem;text-align:center;
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.hero-waves{position:absolute;bottom:0;left:0;width:100%;overflow:hidden;line-height:0;}
+.hero-waves svg{display:block;width:100%;}
+.palm-left{position:absolute;left:-10px;bottom:0;font-size:5rem;transform:scaleX(-1);line-height:1;}
+.palm-right{position:absolute;right:-10px;bottom:0;font-size:5rem;line-height:1;}
+.sun{position:absolute;top:15px;right:60px;font-size:2.5rem;animation:spin-slow 20s linear infinite;}
+@keyframes spin-slow{to{transform:rotate(360deg);}}
+.hero-logo{font-family:'Pacifico',cursive;font-size:clamp(2rem,7vw,3rem);color:#fff;text-shadow:0 3px 0 #CC4400;position:relative;z-index:1;}
+.hero-logo span{color:#FFE566;}
+.hero-tagline{color:#fff;font-size:.95rem;font-weight:700;margin-top:.4rem;position:relative;z-index:1;opacity:.9;}
+.hero-emoji{font-size:1.2rem;margin: 0 4px;}
+
+/* WRAP */
+.wrap{max-width:680px;margin:0 auto;padding:1.75rem 1rem 5rem;}
+
+/* CARDS */
+.card{
+  background:var(--surface);
+  border:2px solid var(--border);
+  border-radius:var(--r);
+  padding:1.5rem;
+  margin-bottom:1.25rem;
+  box-shadow:0 4px 20px #FFB83020;
+  animation:rise .3s ease both;opacity:0;
+}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
+.badge{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0;box-shadow:0 3px 0 #CC4400;}
+.badge.teal{background:var(--teal);box-shadow:0 3px 0 #009980;}
+.badge.gold{background:var(--accent2);box-shadow:0 3px 0 #CC8800;color:var(--text);}
+.card-head h2{font-size:1.1rem;font-weight:800;color:var(--text);}
+
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+input[type=text],input[type=date]{
+  border:2px solid var(--border);border-radius:var(--rs);
+  padding:11px 14px;font-size:15px;
+  font-family:'Nunito',sans-serif;font-weight:600;
+  background:var(--surface2);color:var(--text);
+  outline:none;transition:border-color .15s,box-shadow .15s;
+  width:100%;max-width:100%;min-width:0;
+  -webkit-appearance:none;appearance:none;
+}
+input[type=text]::placeholder{color:var(--muted);}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #FF6B3520;}
+.row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+.row .field{flex:1;min-width:120px;}
+
+/* BUTTONS */
+.btn{
+  border:2px solid var(--border);border-radius:var(--rs);
+  padding:11px 20px;font-size:14px;font-weight:800;
+  font-family:'Nunito',sans-serif;
+  background:var(--surface2);color:var(--text);
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{background:var(--surface3);border-color:var(--accent2);}
+.btn:active{transform:scale(.96);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 0 #CC4400;}
+.btn-primary:hover{background:#e55a25;border-color:#e55a25;}
+.btn-primary:active{box-shadow:0 1px 0 #CC4400;transform:translateY(3px);}
+.btn-teal{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 4px 0 #009980;}
+.btn-teal:hover{background:#00b596;}
+.btn-teal:active{box-shadow:0 1px 0 #009980;transform:translateY(3px);}
+.btn-gold{background:var(--accent2);color:var(--text);border-color:var(--accent2);box-shadow:0 4px 0 #CC8800;}
+.btn-gold:hover{background:#e5a420;}
+.btn-gold:active{box-shadow:0 1px 0 #CC8800;transform:translateY(3px);}
+.btn-danger{background:#FFE8E8;color:#CC3333;border-color:#FFAAAA;}
+.btn-danger:hover{background:#FFCCCC;}
+.btn-sm{padding:7px 13px;font-size:13px;}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--accent);padding:8px 0;font-size:13px;font-weight:700;}
+.btn-ghost:hover{text-decoration:underline;}
+.btn-full{width:100%;justify-content:center;display:flex;align-items:center;gap:8px;}
+.notice{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px;}
+.error{color:#CC3333;font-style:normal;}
+
+/* SHARE */
+.share-box{
+  background:linear-gradient(135deg,#FFF3D6,#FFE8B0);
+  border:2px dashed var(--border);
+  border-radius:var(--rs);padding:1rem;margin-top:1rem;
+}
+.share-box p{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;}
+.share-url{display:flex;gap:8px;align-items:center;}
+.share-url input{flex:1;font-size:12px;padding:8px 10px;background:#fff;color:var(--muted);border-color:#FFD98A;}
+.copied{color:var(--teal);font-size:12px;font-weight:800;opacity:0;transition:opacity .3s;margin-top:6px;display:block;}
+.copied.show{opacity:1;}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;margin-top:1.25rem;gap:6px;}
+#qrcode canvas,#qrcode img{border-radius:12px;border:6px solid #fff;box-shadow:0 4px 16px #FFB83040;}
+.qr-wrap p{font-size:12px;color:var(--muted);font-weight:700;}
+
+/* CALENDAR */
+.month-nav{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.month-title{font-size:1rem;font-weight:800;flex:1;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-hdr{text-align:center;font-size:10px;font-weight:800;color:var(--muted);padding:5px 0;text-transform:uppercase;letter-spacing:.04em;}
+.day{
+  border:2px solid var(--border);border-radius:10px;
+  min-height:44px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;cursor:pointer;color:var(--text);
+  transition:background 0.05s, border-color 0.05s;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  background:var(--surface);
+  -webkit-user-select:none;
+}
+.day:hover:not(.empty):not(.past):not(.out-range){border-color:var(--accent);background:#FFF0E8;}
+.day:active:not(.empty):not(.past):not(.out-range){transform:scale(.9);}
+.day.selected{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:900;box-shadow:0 3px 0 #CC4400;}
+.day.empty{border:none;cursor:default;opacity:0;}
+.day.out-range{opacity:.15;cursor:default;}
+.day.past{opacity:.25;cursor:not-allowed;}
+.day.confirmed-day{background:var(--teal)!important;border-color:var(--teal)!important;color:#fff!important;font-weight:900;box-shadow:0 3px 0 #009980;}
+.day.heat-1{background:#FFF8E0;border-color:#FFE589;}
+.day.heat-2{background:#FFE589;border-color:#FFD043;}
+.day.heat-3{background:#FFD043;border-color:#FFB830;color:var(--text);}
+.day.heat-4{background:#FF9F40;border-color:#FF6B35;color:#fff;}
+.day.heat-5{background:#FF6B35;border-color:#CC4400;color:#fff;font-weight:900;}
+.heat-count{font-size:9px;opacity:.8;margin-top:1px;font-weight:800;}
+.heatmap-legend{display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.heatmap-legend span{font-size:11px;color:var(--muted);font-weight:700;}
+.legend-boxes{display:flex;gap:3px;}
+.legend-box{width:16px;height:16px;border-radius:4px;border:2px solid transparent;}
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:1rem;min-height:28px;}
+.tag{display:inline-flex;align-items:center;gap:5px;background:#FFE8D6;color:var(--accent);border-radius:99px;padding:4px 12px;font-size:12px;font-weight:700;border:1.5px solid #FFD0B0;}
+.tag-x{cursor:pointer;opacity:.5;font-size:15px;}
+.tag-x:hover{opacity:1;}
+
+/* CHIPS */
+.participants{display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem;}
+.chip{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--border);border-radius:99px;padding:5px 13px 5px 5px;font-size:13px;font-weight:700;background:var(--surface2);}
+.avatar-sm{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
+
+/* RANKING */
+.rank-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;overflow-x:auto;padding-bottom:2px;}
+.rtab{border:2px solid var(--border);border-radius:99px;padding:6px 15px;font-size:13px;cursor:pointer;background:var(--surface2);color:var(--muted);font-family:'Nunito',sans-serif;font-weight:800;transition:all .12s;white-space:nowrap;}
+.rtab.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 3px 0 #CC4400;}
+.rtab:hover:not(.active){background:var(--surface3);}
+.rank-list{list-style:none;}
+.rank-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:2px dashed var(--border);}
+.rank-item:last-child{border-bottom:none;}
+.rank-num{font-family:'Pacifico',cursive;font-size:1.5rem;min-width:30px;color:var(--muted);text-align:center;line-height:1;padding-top:2px;}
+.rank-num.gold{color:var(--accent2);}
+.rank-info{flex:1;min-width:0;}
+.rank-date{font-weight:800;font-size:15px;margin-bottom:5px;}
+.bar-wrap{background:var(--surface2);border-radius:99px;height:6px;overflow:hidden;margin:5px 0 8px;border:1px solid var(--border);}
+.bar{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .6s ease;}
+.rank-avatars{display:flex;flex-wrap:wrap;gap:4px;}
+.rank-right{text-align:right;min-width:48px;padding-top:2px;}
+.rank-pct{font-family:'Pacifico',cursive;font-size:1.1rem;color:var(--accent);}
+.rank-sub{font-size:11px;color:var(--muted);font-weight:700;}
+
+/* CONFIRM */
+.confirm-section{background:linear-gradient(135deg,#FFF3D6,#FFE8B0);border:2px solid var(--border);border-radius:var(--rs);padding:1rem;margin-top:1rem;}
+.confirm-section h4{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.confirm-date-list{display:flex;flex-wrap:wrap;gap:6px;}
+.confirm-date-btn{border:2px solid var(--border);border-radius:var(--rs);padding:7px 13px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:var(--text);font-family:'Nunito',sans-serif;transition:all .15s;}
+.confirm-date-btn:hover{border-color:var(--teal);}
+.confirm-date-btn.active{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 3px 0 #009980;}
+
+/* CONFIRMED BANNER */
+.confirmed-banner{
+  background:linear-gradient(135deg,#E0FFF8,#B8FFF0);
+  border:2px solid #80EED8;
+  color:var(--text);border-radius:var(--r);
+  padding:1rem 1.25rem;margin-bottom:1rem;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.cb-date{font-weight:800;color:#009980;font-size:1rem;}
+.export-btns{display:flex;gap:6px;margin-left:auto;}
+
+/* DASHBOARD */
+.ev-card{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:var(--r);padding:1rem 1.25rem;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all .15s;
+  margin-bottom:8px;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 3px 0 #FFD98A;
+}
+.ev-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 5px 0 #FFD98A;}
+.ev-card:active{transform:translateY(1px);box-shadow:0 1px 0 #FFD98A;}
+.ev-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 3px 0 #CC4400;}
+.ev-icon.teal{background:linear-gradient(135deg,var(--teal),#00A896);box-shadow:0 3px 0 #009980;}
+.ev-info{flex:1;min-width:0;}
+.ev-name{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ev-meta{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;}
+.ev-badge{font-size:11px;font-weight:800;border-radius:99px;padding:3px 10px;white-space:nowrap;}
+.ev-badge.org{background:#FFE8D6;color:var(--accent);border:1.5px solid #FFD0B0;}
+.ev-badge.part{background:#E0FFF8;color:#009980;border:1.5px solid #80EED8;}
+.section-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;margin-top:1.5rem;display:flex;align-items:center;gap:6px;}
+.section-title:first-child{margin-top:0;}
+.section-title::before{content:'';flex:none;width:20px;height:3px;border-radius:99px;background:var(--accent2);}
+
+/* MODE PILL */
+.mode-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:2px solid var(--border);border-radius:99px;padding:4px 12px;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:1.25rem;}
+.mode-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);}
+
+/* VIEWS */
+.view{display:none;}
+.view.active{display:block;}
+.spinner{display:inline-block;width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none!important;}
+#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+
+/* THEME BUTTONS */
+.theme-btn{border:2px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;background:var(--surface2);color:var(--text);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.theme-btn:hover{background:var(--surface3);}
+.theme-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 3px 0 #CC4400;}
+/* MAYBE - clearer visual */
+.day.selected-maybe{background:var(--accent2)!important;border-color:#CC8800!important;color:#fff!important;font-weight:900;box-shadow:0 3px 0 #CC8800;}
+.day.selected-maybe::after{content:'?';font-size:9px;position:absolute;top:2px;right:3px;opacity:.8;}
+/* DESTINATION POLL */
+.dest-card{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:8px;transition:all .15s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.dest-card:hover{border-color:var(--accent);}
+.dest-card.voted{border-color:var(--accent);background:var(--surface2);}
+.dest-bar-wrap{background:var(--surface2);border-radius:99px;height:8px;overflow:hidden;margin-top:6px;border:1px solid var(--border);}
+.dest-bar{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .6s ease;}
+.dest-input{display:flex;gap:8px;margin-top:8px;}
+.dest-input input{flex:1;border:2px solid var(--border);border-radius:var(--rs);padding:9px 12px;font-size:14px;font-family:'Nunito',sans-serif;font-weight:600;background:var(--surface2);color:var(--text);outline:none;}
+.dest-input input:focus{border-color:var(--accent);}
+.maybe-hint{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:.75rem;background:#FFF3CC;border:2px solid #FFD043;border-radius:var(--rs);padding:8px 12px;}
+/* TOGGLE */
+#maybe-toggle:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;}
+#maybe-toggle.on{background:var(--accent2);}
+#maybe-toggle.on:before{transform:translateX(20px);}
+@media(max-width:600px){
+  .wrap{padding:1.25rem .75rem 5rem;}
+  .card{padding:1.25rem;}
+  .cal-grid{gap:2px;}
+  .day{min-height:38px;font-size:12px;}
+  .btn{padding:12px 16px;}
+  input[type=date]{min-height:48px;font-size:14px;padding:10px 10px;}
+  .theme-btn{padding:6px 10px;font-size:12px;}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="hero" onclick="goHome()">
+  <div class="sun">☀️</div>
+  <div class="palm-left">🌴</div>
+  <div class="palm-right">🌴</div>
+  <div class="hero-logo">Prik<span>Date</span></div>
+  <p class="hero-tagline">🏖️ Plan je zomer samen — zie meteen de beste datums!</p>
+  <p style="position:relative;z-index:1;font-size:11px;color:#fff8;margin-top:6px;font-weight:700">v2.7 — beschikbaarheid aanpassen</p>
+  <div class="hero-waves">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" height="40">
+      <path d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z" fill="#FFF9EE"/>
+    </svg>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- HOME -->
+<div class="view active" id="view-home">
+  <div class="card">
+    <div class="card-head"><span class="badge">+</span><h2>Nieuw evenement aanmaken 🎉</h2></div>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div class="field"><label>Naam van het evenement</label><input type="text" id="event-name" placeholder="bv. Zomertrip Spanje 🇪🇸"/></div>
+      <div style="display:flex;gap:10px;flex-direction:column;">
+        <div class="field"><label>Van</label><input type="date" id="event-start"/></div>
+        <div class="field"><label>Tot</label><input type="date" id="event-end"/></div>
+      </div>
+      <div class="field"><label>Jouw naam (organisator)</label><input type="text" id="organizer-name" placeholder="bv. Bavo"/></div>
+      <!-- THEME PICKER -->
+      <div class="field">
+        <label>Thema</label>
+        <div id="theme-picker" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:2px;">
+          <button type="button" class="theme-btn active" data-theme="beach" onclick="selectTheme(this)">🏖️ Strand</button>
+          <button type="button" class="theme-btn" data-theme="ski" onclick="selectTheme(this)">⛷️ Ski</button>
+          <button type="button" class="theme-btn" data-theme="city" onclick="selectTheme(this)">🏙️ City trip</button>
+          <button type="button" class="theme-btn" data-theme="party" onclick="selectTheme(this)">🎉 Feestje</button>
+          <button type="button" class="theme-btn" data-theme="nature" onclick="selectTheme(this)">🌲 Natuur</button>
+          <button type="button" class="theme-btn" data-theme="festival" onclick="selectTheme(this)">🎵 Festival</button>
+        </div>
+      </div>
+      <!-- MAYBE OPTION -->
+      <div style="display:flex;align-items:center;gap:10px;background:var(--surface2);border:2px solid var(--border);border-radius:var(--rs);padding:12px 14px;">
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:800">🟡 "Misschien" optie inschakelen</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;">Deelnemers kunnen ook "misschien" aanduiden naast "ja"</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0;">
+          <input type="checkbox" id="allow-maybe" style="opacity:0;width:0;height:0;position:absolute;">
+          <span id="maybe-toggle" onclick="toggleMaybe()" style="position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:99px;transition:.2s;"></span>
+        </label>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="maakEvenement()" id="btn-create">Aanmaken 🚀</button>
+      <p class="notice error hidden" id="create-error"></p>
+    </div>
+  </div>
+  <div id="dashboard-section"></div>
+  <div style="text-align:center;margin-top:.5rem;">
+    <button class="btn btn-ghost" onclick="document.getElementById('join-card').classList.toggle('hidden')">Uitnodigingslink ontvangen? Klik hier →</button>
+  </div>
+  <div class="card hidden" id="join-card" style="margin-top:1rem;">
+    <div class="card-head"><span class="badge teal">↗</span><h2>Evenement-ID invoeren</h2></div>
+    <div class="row">
+      <div class="field" style="flex:1"><input type="text" id="join-id" placeholder="bv. abc123"/></div>
+      <button class="btn btn-teal" onclick="joinById()">Open 🏄</button>
+    </div>
+  </div>
+</div>
+
+<!-- CREATED -->
+<div class="view" id="view-created">
+  <div class="card">
+    <div class="mode-pill"><span class="dot"></span>Organisator</div>
+    <div class="card-head"><span class="badge">🎉</span><h2 id="created-title">Evenement aangemaakt!</h2></div>
+    <p style="font-size:14px;color:var(--muted);font-weight:600;margin-bottom:.5rem;">Stuur deze link naar je vrienden:</p>
+    <div class="share-box">
+      <p>🔗 Uitnodigingslink</p>
+      <div class="share-url"><input type="text" id="share-link" readonly/><button class="btn btn-sm btn-primary" onclick="copyLink()">Kopieer</button></div>
+      <span class="copied" id="copied-msg">✓ Gekopieerd!</span>
+    </div>
+    <div class="qr-wrap"><div id="qrcode"></div><p>📱 Scan met je telefoon</p></div>
+    <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:8px;">
+      <button class="btn btn-teal btn-full" onclick="goFillIn()">Mijn beschikbaarheid invullen 📅</button>
+      <button class="btn btn-full" onclick="viewResults()">Resultaten bekijken 📊</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="goHome()">← Overzicht</button>
+        <button class="btn btn-danger btn-sm" onclick="verwijderEvenement()" style="margin-left:auto">🗑 Verwijderen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FILL IN -->
+<div class="view" id="view-fill">
+  <div class="card" id="fill-name-card">
+    <div class="card-head"><span class="badge teal">1</span><h2 id="fill-event-title">Wie ben jij? 👋</h2></div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <input type="text" id="fill-name" placeholder="Jouw naam" onkeydown="if(event.key==='Enter')confirmName()" style="font-size:16px;"/>
+      <button class="btn btn-teal btn-full" onclick="confirmName()">Bevestig →</button>
+    </div>
+    <div class="participants" id="already-filled"></div>
+    <div style="margin-top:1rem;"><button class="btn btn-ghost" onclick="goHome()">← Overzicht</button></div>
+  </div>
+  <div class="card hidden" id="fill-cal-card">
+    <div class="card-head"><span class="badge teal">2</span><h2>Klik op jouw vrije dagen ☀️</h2></div>
+    <p style="font-size:13px;color:var(--accent);font-weight:700;margin-bottom:1rem;" id="filling-as"></p>
+    <div id="maybe-hint" class="maybe-hint" style="display:none">💡 Tik 1x = <strong>✅ Ja</strong> &nbsp; Tik 2x = <strong>🟡 Misschien</strong> &nbsp; Tik 3x = terug leeg</div>
+    <div class="month-nav">
+      <button class="btn btn-sm" onclick="prevMonth()">←</button>
+      <span class="month-title" id="month-title"></span>
+      <button class="btn btn-sm" onclick="nextMonth()">→</button>
+    </div>
+    <div class="heatmap-legend hidden" id="heatmap-legend">
+      <span>Anderen beschikbaar:</span>
+      <div class="legend-boxes">
+        <div class="legend-box" style="background:#FFF8E0;border-color:#FFE589"></div>
+        <div class="legend-box" style="background:#FFD043;border-color:#FFB830"></div>
+        <div class="legend-box" style="background:#FF6B35;border-color:#CC4400"></div>
+      </div>
+      <span>weinig → veel</span>
+    </div>
+    <div class="cal-grid" id="calendar">
+      <div class="cal-hdr">Ma</div><div class="cal-hdr">Di</div><div class="cal-hdr">Wo</div>
+      <div class="cal-hdr">Do</div><div class="cal-hdr">Vr</div><div class="cal-hdr">Za</div><div class="cal-hdr">Zo</div>
+    </div>
+    <div class="tags" id="sel-tags"></div>
+    <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:8px;">
+      <button class="btn btn-primary btn-full" onclick="saveDates()" id="btn-save">Opslaan ✓</button>
+      <button class="btn btn-full" onclick="resetName()">← Andere naam</button>
+      <span class="spinner hidden" id="save-spinner"></span>
+    </div>
+    <p class="notice error hidden" id="save-error"></p>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="view" id="view-results">
+  <div id="confirmed-banner-wrap"></div>
+  <div class="card">
+    <div class="card-head"><span class="badge gold">★</span><h2 id="results-title">Resultaten 🏆</h2></div>
+    <div class="participants" id="results-participants" style="margin-bottom:1.25rem;"></div>
+    <div class="rank-tabs">
+      <button class="rtab active" onclick="showRanking(1,this)">1 dag</button>
+      <button class="rtab" onclick="showRanking(2,this)">2 dagen</button>
+      <button class="rtab" onclick="showRanking(3,this)">3 dagen</button>
+      <button class="rtab" onclick="showRanking(4,this)">4 dagen</button>
+      <button class="rtab" onclick="showRanking(5,this)">5 dagen</button>
+    </div>
+    <ul class="rank-list" id="rank-list"></ul>
+    <div class="confirm-section hidden" id="confirm-section">
+      <h4>📌 Datum bevestigen als organisator</h4>
+      <div class="confirm-date-list" id="confirm-date-list"></div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-teal btn-sm" onclick="confirmDate()">Bevestig ✓</button>
+        <button class="btn btn-sm" onclick="clearConfirmed()">Wissen</button>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:8px;">
+      <button class="btn btn-full" onclick="goFillIn()">+ Nog iemand toevoegen</button>
+      <button class="btn btn-teal btn-full" onclick="editMyAvailability()">✏️ Mijn beschikbaarheid aanpassen</button>
+      <button class="btn btn-full" onclick="goToHeatmap()">🗓 Heatmap bekijken</button>
+      <button class="btn btn-full" onclick="goToPoll()">🌍 Bestemming kiezen</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <button class="btn btn-sm" onclick="refreshResults()">↻ Vernieuwen</button>
+        <button class="btn btn-ghost" onclick="goHome()">← Overzicht</button>
+        <button class="btn btn-danger btn-sm hidden" id="btn-delete-results" onclick="verwijderEvenement()" style="margin-left:auto">🗑 Verwijderen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEATMAP -->
+<div class="view" id="view-heatmap">
+  <div class="card">
+    <div class="card-head"><span class="badge gold">🗓</span><h2 id="heatmap-title">Heatmap 🌡️</h2></div>
+    <p style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:1rem;">Hoe warmer de kleur, hoe meer mensen beschikbaar zijn ☀️</p>
+    <div class="heatmap-legend">
+      <span>Beschikbaar:</span>
+      <div class="legend-boxes">
+        <div class="legend-box" style="background:#FFF8E0;border-color:#FFE589"></div>
+        <div class="legend-box" style="background:#FFE589;border-color:#FFD043"></div>
+        <div class="legend-box" style="background:#FFD043;border-color:#FFB830"></div>
+        <div class="legend-box" style="background:#FF9F40;border-color:#FF6B35"></div>
+        <div class="legend-box" style="background:#FF6B35;border-color:#CC4400"></div>
+      </div>
+      <span>weinig → iedereen</span>
+    </div>
+    <div id="heatmap-months"></div>
+    <div style="margin-top:1.25rem;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" onclick="viewResults()">← Resultaten</button>
+      <button class="btn btn-ghost" onclick="goHome()">← Overzicht</button>
+    </div>
+  </div>
+</div>
+
+<!-- DESTINATION POLL -->
+<div class="view" id="view-poll">
+  <div class="card">
+    <div class="card-head"><span class="badge" style="background:var(--accent2);color:#1A1A1A">🌍</span><h2 id="poll-title">Bestemming kiezen</h2></div>
+    <p style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:1rem;">Stem op jouw favoriete bestemming!</p>
+    <div id="poll-add-section" class="hidden">
+      <p style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Bestemmingen toevoegen</p>
+      <div class="dest-input">
+        <input type="text" id="dest-input" placeholder="bv. Barcelona 🇪🇸" onkeydown="if(event.key==='Enter')addDestination()"/>
+        <button class="btn btn-primary btn-sm" onclick="addDestination()">+</button>
+      </div>
+      <p class="notice hidden" id="dest-error"></p>
+    </div>
+    <div id="dest-list" style="margin-top:1rem;display:flex;flex-direction:column;gap:8px;"></div>
+    <div id="poll-vote-section" class="hidden" style="margin-top:1rem;">
+      <p style="font-size:13px;color:var(--accent);font-weight:700;" id="poll-voted-msg"></p>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" onclick="viewResults()">← Resultaten</button>
+      <button class="btn btn-ghost" onclick="goHome()">← Overzicht</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+const SUPA_URL='https://obeahjmdxclqlyyzepit.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZWFoam1keGNscWx5eXplcGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDcxNTgsImV4cCI6MjA5MzcyMzE1OH0.W-bPxETvjGmq2-5vcB5U1rf7rNxdfXwGZ6z7J0LGje4';
+const COLORS=[{bg:'#FFE8D6',text:'#CC4400'},{bg:'#E0FFF8',text:'#009980'},{bg:'#FFF3CC',text:'#AA6600'},{bg:'#F0E8FF',text:'#6633CC'},{bg:'#E8F5FF',text:'#0066CC'},{bg:'#FFE8F0',text:'#CC0066'},{bg:'#F0FFE8',text:'#336600'},{bg:'#FFE8E8',text:'#CC0000'}];
+const MONTHS=['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+let currentEvent=null,currentName=null,selectedDays=new Set(),viewYear,viewMonth,allResponses=[],isOrganizer=false,selectedConfirmDate=null;
+
+// Migrate old keys
+(function migrate(){try{const oh=localStorage.getItem('wki_history');const os=localStorage.getItem('wki_session');if(oh&&!localStorage.getItem('pd_history'))localStorage.setItem('pd_history',oh);if(os&&!localStorage.getItem('pd_session'))localStorage.setItem('pd_session',os);}catch(e){}})();
+const THEMES={
+  beach:{
+    emoji:'🏖️',label:'Strand',
+    hero:'linear-gradient(160deg,#FFD93D 0%,#FF6B35 50%,#FF8E53 100%)',
+    bg:'#FFF9EE',surface:'#FFFFFF',surface2:'#FFF3D6',
+    accent:'#FF6B35',accent2:'#FFB830',border:'#FFD98A',
+    text:'#2D2416',muted:'#9C8B6E',
+    leftDeco:'🌴',rightDeco:'🌴',sunEmoji:'☀️',
+    tagline:'🏖️ Plan je zomer samen — zie meteen de beste datums!',
+    wave:'#FFF9EE',
+  },
+  ski:{
+    emoji:'⛷️',label:'Ski',
+    hero:'linear-gradient(160deg,#B3E5FC 0%,#4FC3F7 50%,#0288D1 100%)',
+    bg:'#F0F8FF',surface:'#FFFFFF',surface2:'#E3F2FD',
+    accent:'#0277BD',accent2:'#4FC3F7',border:'#B3E5FC',
+    text:'#0D1B2A',muted:'#5B7A9C',
+    leftDeco:'🎿',rightDeco:'❄️',sunEmoji:'🌨️',
+    tagline:'⛷️ Plan je ski-trip samen — vind de perfecte week!',
+    wave:'#F0F8FF',
+  },
+  city:{
+    emoji:'🏙️',label:'City trip',
+    hero:'linear-gradient(160deg,#37474F 0%,#546E7A 50%,#78909C 100%)',
+    bg:'#F5F5F5',surface:'#FFFFFF',surface2:'#ECEFF1',
+    accent:'#37474F',accent2:'#78909C',border:'#CFD8DC',
+    text:'#1A1A2E',muted:'#607D8B',
+    leftDeco:'🗺️',rightDeco:'✈️',sunEmoji:'🏙️',
+    tagline:'🏙️ Plan jullie city trip — wanneer kan iedereen?',
+    wave:'#F5F5F5',
+  },
+  party:{
+    emoji:'🎉',label:'Feestje',
+    hero:'linear-gradient(160deg,#FF6B9D 0%,#C850C0 50%,#FFBD59 100%)',
+    bg:'#FFF0F8',surface:'#FFFFFF',surface2:'#FCE4EC',
+    accent:'#C850C0',accent2:'#FFBD59',border:'#F8BBD0',
+    text:'#2D0A2E',muted:'#9C4DAC',
+    leftDeco:'🎊',rightDeco:'🎈',sunEmoji:'🎉',
+    tagline:'🎉 Plan het feestje — wanneer kan iedereen erbij?',
+    wave:'#FFF0F8',
+  },
+  nature:{
+    emoji:'🌲',label:'Natuur',
+    hero:'linear-gradient(160deg,#2E7D32 0%,#56AB2F 50%,#A8E063 100%)',
+    bg:'#F1F8E9',surface:'#FFFFFF',surface2:'#DCEDC8',
+    accent:'#2E7D32',accent2:'#8BC34A',border:'#C5E1A5',
+    text:'#1B2E1B',muted:'#558B2F',
+    leftDeco:'🌿',rightDeco:'🍃',sunEmoji:'🌲',
+    tagline:'🌲 Plan jullie natuuravontuur — wie kan wanneer?',
+    wave:'#F1F8E9',
+  },
+  festival:{
+    emoji:'🎵',label:'Festival',
+    hero:'linear-gradient(160deg,#4A148C 0%,#7B2FBE 50%,#FF6B35 100%)',
+    bg:'#F3E5F5',surface:'#FFFFFF',surface2:'#EDE7F6',
+    accent:'#6A1B9A',accent2:'#FF6B35',border:'#CE93D8',
+    text:'#1A0030',muted:'#7B1FA2',
+    leftDeco:'🎸',rightDeco:'🎤',sunEmoji:'🎵',
+    wave:'#F3E5F5',
+    tagline:'🎵 Plan het festival — wanneer kan de crew?',
+  },
+};
+let selectedTheme='beach';
+let allowMaybe=false;
+let maybeDays=new Set();
+
+function selectTheme(btn){
+  selectedTheme=btn.dataset.theme;
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  applyTheme(selectedTheme);
+}
+function toggleMaybe(){
+  allowMaybe=!allowMaybe;
+  const tog=document.getElementById('maybe-toggle');
+  if(allowMaybe)tog.classList.add('on');else tog.classList.remove('on');
+}
+function applyTheme(t){
+  const th=THEMES[t]||THEMES.beach;
+  // CSS variables
+  document.documentElement.style.setProperty('--bg',th.bg);
+  document.documentElement.style.setProperty('--surface',th.surface);
+  document.documentElement.style.setProperty('--surface2',th.surface2);
+  document.documentElement.style.setProperty('--accent',th.accent);
+  document.documentElement.style.setProperty('--accent2',th.accent2);
+  document.documentElement.style.setProperty('--border',th.border);
+  document.documentElement.style.setProperty('--text',th.text);
+  document.documentElement.style.setProperty('--muted',th.muted);
+  // Hero
+  const hero=document.querySelector('.hero');
+  if(hero)hero.style.background=th.hero;
+  // Decorations
+  const pl=document.querySelector('.palm-left');
+  const pr=document.querySelector('.palm-right');
+  const sun=document.querySelector('.sun');
+  if(pl)pl.textContent=th.leftDeco;
+  if(pr)pr.textContent=th.rightDeco;
+  if(sun)sun.textContent=th.sunEmoji;
+  // Wave color
+  const wave=document.querySelector('.hero-waves path');
+  if(wave)wave.setAttribute('fill',th.wave);
+  // Tagline
+  const tl=document.querySelector('.hero-tagline');
+  if(tl)tl.textContent=th.tagline;
+  // Body bg
+  document.body.style.background=th.bg;
+}
+function getHistory(){try{return JSON.parse(localStorage.getItem('pd_history')||'[]');}catch(e){return[];}}
+function saveToHistory(ev,role,name){let h=getHistory();h=h.filter(x=>x.id!==ev.id);h.unshift({id:ev.id,name:ev.name,start_date:ev.start_date,end_date:ev.end_date,role,myName:name,ts:Date.now()});if(h.length>20)h=h.slice(0,20);try{localStorage.setItem('pd_history',JSON.stringify(h));}catch(e){}}
+function removeFromHistory(id){let h=getHistory();h=h.filter(x=>x.id!==id);try{localStorage.setItem('pd_history',JSON.stringify(h));}catch(e){}}
+function saveSession(ev,name,organizer){try{localStorage.setItem('pd_session',JSON.stringify({eventId:ev.id,name,organizer}));}catch(e){}}
+function loadSession(){try{return JSON.parse(localStorage.getItem('pd_session')||'null');}catch(e){return null;}}
+function clearSession(){try{localStorage.removeItem('pd_session');}catch(e){}}
+
+async function sb(path,method='GET',body=null){
+  const opts={method,headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''}};
+  if(body)opts.body=JSON.stringify(body);
+  const r=await fetch(SUPA_URL+'/rest/v1'+path,opts);
+  if(!r.ok){const e=await r.text();throw new Error(e);}
+  return r.status===204?null:r.json();
+}
+
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function goHome(){currentEvent=null;currentName=null;selectedDays=new Set();isOrganizer=false;clearSession();history.replaceState(null,'',window.location.pathname);renderDashboard();showView('view-home');}
+
+function renderDashboard(){
+  const h=getHistory();const sec=document.getElementById('dashboard-section');
+  if(!h.length){sec.innerHTML='';return;}
+  const org=h.filter(x=>x.role==='organizer');
+  const orgIds=new Set(org.map(x=>x.id));
+  const part=h.filter(x=>x.role==='participant'&&!orgIds.has(x.id));
+  let html='';
+  if(org.length){html+='<p class="section-title">Jouw evenementen</p>';html+=org.map(ev=>`<div class="ev-card" onclick="openEventOrg('${ev.id}','${esc(ev.myName)}')"><div class="ev-icon">🌴</div><div class="ev-info"><div class="ev-name">${esc(ev.name)}</div><div class="ev-meta">📅 ${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)}</div></div><span class="ev-badge org">Organisator</span></div>`).join('');}
+  if(part.length){html+='<p class="section-title" style="margin-top:1.25rem">Ingevuld door jou</p>';html+=part.map(ev=>`<div class="ev-card" onclick="openEventPart('${ev.id}')"><div class="ev-icon teal">✓</div><div class="ev-info"><div class="ev-name">${esc(ev.name)}</div><div class="ev-meta">📅 ${fmtDate(ev.start_date)} – ${fmtDate(ev.end_date)} · als ${esc(ev.myName)}</div></div><span class="ev-badge part">Deelnemer</span></div>`).join('');}
+  sec.innerHTML=html;
+}
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+async function openEventOrg(id,name){
+  try{const[ev]=await sb('/events?id=eq.'+id+'&select=*');if(!ev){alert('Niet meer gevonden.');return;}currentEvent=ev;currentName=name;isOrganizer=true;saveSession(ev,name,true);if(ev.theme)applyTheme(ev.theme);setShareLink();showView('view-created');}
+  catch(e){alert('Fout: '+e.message);}
+}
+async function openEventPart(id){
+  try{const[ev]=await sb('/events?id=eq.'+id+'&select=*');if(!ev){alert('Niet meer gevonden.');return;}currentEvent=ev;if(ev.theme)applyTheme(ev.theme);await loadResults();showView('view-results');}
+  catch(e){alert('Fout: '+e.message);}
+}
+
+function randId(){return Math.random().toString(36).slice(2,8);}
+
+async function maakEvenement(){
+  const name=document.getElementById('event-name').value.trim();
+  const start=document.getElementById('event-start').value;
+  const end=document.getElementById('event-end').value;
+  const org=document.getElementById('organizer-name').value.trim();
+  const errEl=document.getElementById('create-error');errEl.classList.add('hidden');
+  if(!name||!start||!end||!org){errEl.textContent='Vul alle velden in.';errEl.classList.remove('hidden');return;}
+  if(start>end){errEl.textContent='Begindatum moet voor einddatum liggen.';errEl.classList.remove('hidden');return;}
+  const btn=document.getElementById('btn-create');btn.disabled=true;btn.textContent='Even geduld... ⏳';
+  try{
+    const id=randId();
+    const[ev]=await sb('/events','POST',{id,name,start_date:start,end_date:end,confirmed_date:null,theme:selectedTheme,allow_maybe:allowMaybe});
+    currentEvent=ev;currentName=org;isOrganizer=true;
+    saveToHistory(ev,'organizer',org);saveSession(ev,org,true);
+    setShareLink();showView('view-created');
+  }catch(e){errEl.textContent='Fout: '+e.message;errEl.classList.remove('hidden');}
+  btn.disabled=false;btn.textContent='Aanmaken 🚀';
+}
+
+function setShareLink(){
+  const url=window.location.href.split('?')[0]+'?event='+currentEvent.id;
+  document.getElementById('share-link').value=url;
+  document.getElementById('created-title').textContent='«'+currentEvent.name+'» 🎉';
+  const qrEl=document.getElementById('qrcode');qrEl.innerHTML='';
+  new QRCode(qrEl,{text:url,width:150,height:150,colorDark:'#2D2416',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+}
+
+function copyLink(){navigator.clipboard.writeText(document.getElementById('share-link').value).catch(()=>{});const m=document.getElementById('copied-msg');m.classList.add('show');setTimeout(()=>m.classList.remove('show'),2000);}
+async function joinById(){const id=document.getElementById('join-id').value.trim();if(!id)return;try{const[ev]=await sb('/events?id=eq.'+id+'&select=*');if(ev){currentEvent=ev;startFillIn();}else alert('Niet gevonden.');}catch(e){alert('Fout: '+e.message);}}
+
+async function verwijderEvenement(){
+  if(!currentEvent||!isOrganizer)return;
+  if(!confirm('Weet je zeker dat je «'+currentEvent.name+'» wil verwijderen?'))return;
+  try{
+    await sb('/responses?event_id=eq.'+currentEvent.id,'DELETE');
+    await sb('/events?id=eq.'+currentEvent.id,'DELETE');
+    removeFromHistory(currentEvent.id);clearSession();
+    currentEvent=null;currentName=null;isOrganizer=false;
+    renderDashboard();showView('view-home');
+  }catch(e){alert('Fout bij verwijderen: '+e.message);}
+}
+
+function editMyAvailability(){
+  if(!currentName){
+    // Geen naam bekend — gewoon naar invulpagina
+    goFillIn();return;
+  }
+  // Naam is bekend, ga direct naar kalender met bestaande keuzes
+  selectedDays=new Set();maybeDays=new Set();
+  const existing=allResponses.find(r=>r.participant_name.toLowerCase()===currentName.toLowerCase());
+  if(existing&&existing.available_dates)existing.available_dates.forEach(d=>selectedDays.add(d));
+  if(existing&&existing.maybe_dates)existing.maybe_dates.forEach(d=>maybeDays.add(d));
+  const start=parseDate(currentEvent.start_date);viewYear=start.getFullYear();viewMonth=start.getMonth();
+  document.getElementById('filling-as').textContent='✦ Je past aan als: '+currentName;
+  if(allResponses.length>1)document.getElementById('heatmap-legend').classList.remove('hidden');
+  const maybeHint=document.getElementById('maybe-hint');
+  if(maybeHint)maybeHint.style.display=currentEvent.allow_maybe?'block':'none';
+  document.getElementById('fill-name-card').classList.add('hidden');
+  document.getElementById('fill-cal-card').classList.remove('hidden');
+  renderCalendar();renderTags();
+  showView('view-fill');
+}
+  if(currentEvent.theme)applyTheme(currentEvent.theme);
+  if(isOrganizer&&currentName){loadAlreadyFilledAndShowCal();}
+  else{loadAlreadyFilled();showView('view-fill');}
+}
+function goFillIn(){
+  if(!currentEvent)return;
+  if(isOrganizer&&currentName){selectedDays=new Set();loadAlreadyFilledAndShowCal();showView('view-fill');}
+  else{currentName=null;selectedDays=new Set();document.getElementById('fill-cal-card').classList.add('hidden');document.getElementById('fill-name').value='';loadAlreadyFilled();showView('view-fill');}
+}
+async function loadAlreadyFilledAndShowCal(){
+  await loadAlreadyFilled();
+  const existing=allResponses.find(r=>r.participant_name.toLowerCase()===currentName.toLowerCase());
+  if(existing&&existing.available_dates)existing.available_dates.forEach(d=>selectedDays.add(d));
+  const start=parseDate(currentEvent.start_date);viewYear=start.getFullYear();viewMonth=start.getMonth();
+  document.getElementById('filling-as').textContent='✦ Je vult in als: '+currentName+(existing?' (bestaande keuzes geladen)':'');
+  if(allResponses.length>1)document.getElementById('heatmap-legend').classList.remove('hidden');
+  document.getElementById('fill-cal-card').classList.remove('hidden');
+  renderCalendar();renderTags();
+}
+async function loadAlreadyFilled(){
+  if(!currentEvent)return;
+  try{
+    allResponses=await sb('/responses?event_id=eq.'+currentEvent.id+'&select=participant_name,available_dates,maybe_dates');
+    document.getElementById('fill-event-title').textContent=currentEvent.name+' — wie ben jij? 👋';
+    const el=document.getElementById('already-filled');
+    if(!allResponses.length){el.innerHTML='<p class="notice" style="margin-top:8px">Nog niemand ingevuld.</p>';return;}
+    el.innerHTML='<p style="font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em;width:100%;margin-top:8px;margin-bottom:4px">Al ingevuld:</p>'+allResponses.map((r,i)=>{const c=COLORS[i%COLORS.length];return`<div class="chip"><div class="avatar-sm" style="background:${c.bg};color:${c.text}">${initials(r.participant_name)}</div>${r.participant_name}</div>`;}).join('');
+  }catch(e){}
+}
+function confirmName(){
+  const v=document.getElementById('fill-name').value.trim();if(!v)return;
+  currentName=v;selectedDays=new Set();maybeDays=new Set();
+  const existing=allResponses.find(r=>r.participant_name.toLowerCase()===v.toLowerCase());
+  if(existing&&existing.available_dates)existing.available_dates.forEach(d=>selectedDays.add(d));
+  if(existing&&existing.maybe_dates)existing.maybe_dates.forEach(d=>maybeDays.add(d));
+  const start=parseDate(currentEvent.start_date);viewYear=start.getFullYear();viewMonth=start.getMonth();
+  document.getElementById('filling-as').textContent='✦ Je vult in als: '+v+(existing?' (bestaande keuzes geladen)':'');
+  if(allResponses.length>0)document.getElementById('heatmap-legend').classList.remove('hidden');
+  // Show maybe hint
+  const maybeHint=document.getElementById('maybe-hint');
+  if(maybeHint){maybeHint.style.display=currentEvent.allow_maybe?'block':'none';}
+  document.getElementById('fill-cal-card').classList.remove('hidden');
+  renderCalendar();renderTags();
+}
+function resetName(){currentName=isOrganizer?currentName:null;selectedDays=new Set();document.getElementById('fill-cal-card').classList.add('hidden');document.getElementById('heatmap-legend').classList.add('hidden');}
+function prevMonth(){viewMonth--;if(viewMonth<0){viewMonth=11;viewYear--;}renderCalendar();}
+function nextMonth(){viewMonth++;if(viewMonth>11){viewMonth=0;viewYear++;}renderCalendar();}
+function othersCount(key){return allResponses.filter(r=>r.participant_name!==currentName&&r.available_dates&&r.available_dates.includes(key)).length;}
+function totalCount(key){return allResponses.filter(r=>r.available_dates&&r.available_dates.includes(key)).length;}
+function heatClass(count,max){if(!count||!max)return'';const p=count/max;if(p<=.2)return'heat-1';if(p<=.4)return'heat-2';if(p<=.6)return'heat-3';if(p<=.8)return'heat-4';return'heat-5';}
+function renderCalendar(){
+  document.getElementById('month-title').textContent=MONTHS[viewMonth]+' '+viewYear;
+  const cal=document.getElementById('calendar');
+  const hdrs=Array.from(cal.querySelectorAll('.cal-hdr'));cal.innerHTML='';hdrs.forEach(h=>cal.appendChild(h));
+  const today=new Date();today.setHours(0,0,0,0);
+  const pStart=parseDate(currentEvent.start_date);
+  const pEnd=parseDate(currentEvent.end_date);
+  const confirmedDate=currentEvent.confirmed_date||null;
+  let dow=new Date(viewYear,viewMonth,1).getDay();dow=dow===0?6:dow-1;
+  for(let i=0;i<dow;i++){const d=document.createElement('div');d.className='day empty';cal.appendChild(d);}
+  const dim=new Date(viewYear,viewMonth+1,0).getDate();
+  const maxOthers=Math.max(...Array.from({length:dim},(_,i)=>{const dt=new Date(viewYear,viewMonth,i+1);return othersCount(toKey(dt));}).filter(x=>x>0),1);
+  for(let d=1;d<=dim;d++){
+    const dt=new Date(viewYear,viewMonth,d);const key=toKey(dt);
+    const inRange=dt>=pStart&&dt<=pEnd;const isPast=dt<today;
+    const el=document.createElement('div');
+    let cls='day';
+    if(!inRange)cls+=' out-range';else if(isPast)cls+=' past';
+    if(confirmedDate&&key===confirmedDate)cls+=' confirmed-day';
+    else{const oc=inRange&&!isPast?othersCount(key):0;if(oc>0)cls+=' '+heatClass(oc,maxOthers);}
+    if(selectedDays.has(key))cls+=' selected';
+    else if(maybeDays.has(key))cls+=' selected-maybe';
+    el.className=cls;
+    const numEl=document.createElement('span');numEl.textContent=d;el.appendChild(numEl);
+    const oc=inRange&&!isPast?othersCount(key):0;
+    if(oc>0&&inRange&&!isPast&&key!==confirmedDate&&!selectedDays.has(key)){const cnt=document.createElement('div');cnt.className='heat-count';cnt.textContent=oc+'×';el.appendChild(cnt);}
+    if(inRange&&!isPast)addDayListeners(el,key);
+    cal.appendChild(el);
+  }
+}
+function toggleDay(key,el,visualAlreadyDone){
+  const allowM=currentEvent&&currentEvent.allow_maybe;
+  if(selectedDays.has(key)){
+    // yes → maybe (if allowed) or yes → empty
+    selectedDays.delete(key);
+    if(!visualAlreadyDone)el.classList.remove('selected');
+    if(allowM){
+      maybeDays.add(key);
+      if(!visualAlreadyDone){el.classList.remove('heat-1','heat-2','heat-3','heat-4','heat-5');el.classList.add('selected-maybe');}
+    } else {
+      const oc=othersCount(key);
+      const dim=new Date(viewYear,viewMonth+1,0).getDate();
+      const maxO=Math.max(...Array.from({length:dim},(_,i)=>othersCount(toKey(new Date(viewYear,viewMonth,i+1)))).filter(x=>x>0),1);
+      if(!visualAlreadyDone&&oc>0)el.classList.add(heatClass(oc,maxO));
+    }
+  } else if(maybeDays.has(key)){
+    // maybe → empty
+    maybeDays.delete(key);
+    if(!visualAlreadyDone){
+      el.classList.remove('selected-maybe');
+      const oc=othersCount(key);
+      const dim=new Date(viewYear,viewMonth+1,0).getDate();
+      const maxO=Math.max(...Array.from({length:dim},(_,i)=>othersCount(toKey(new Date(viewYear,viewMonth,i+1)))).filter(x=>x>0),1);
+      if(oc>0)el.classList.add(heatClass(oc,maxO));
+    }
+  } else {
+    // empty → yes
+    selectedDays.add(key);
+    if(!visualAlreadyDone){el.classList.remove('heat-1','heat-2','heat-3','heat-4','heat-5','selected-maybe');el.classList.add('selected');}
+  }
+  renderTags();
+}
+
+function addDayListeners(el,key){
+  el.addEventListener('touchstart',function(e){
+    e.preventDefault();
+    const allowM=currentEvent&&currentEvent.allow_maybe;
+    if(selectedDays.has(key)){
+      el.classList.remove('selected');
+      if(allowM){el.classList.add('selected-maybe');}
+    } else if(maybeDays.has(key)){
+      el.classList.remove('selected-maybe');
+    } else {
+      el.classList.remove('heat-1','heat-2','heat-3','heat-4','heat-5','selected-maybe');
+      el.classList.add('selected');
+    }
+    toggleDay(key,el,true);
+  },{passive:false});
+  el.addEventListener('click',function(e){
+    toggleDay(key,el,false);
+  });
+}
+function renderTags(){
+  const el=document.getElementById('sel-tags');
+  const sorted=Array.from(selectedDays).sort();
+  const sortedMaybe=Array.from(maybeDays).sort();
+  const yesTags=sorted.map(d=>`<span class="tag">✅ ${fmtDate(d)}<span class="tag-x" onclick="removeDay('${d}','yes')">×</span></span>`);
+  const maybeTags=sortedMaybe.map(d=>`<span class="tag" style="background:#FFF3CC;color:#AA6600;border-color:#FFD043;">🟡 ${fmtDate(d)}<span class="tag-x" onclick="removeDay('${d}','maybe')">×</span></span>`);
+  el.innerHTML=[...yesTags,...maybeTags].join('')||'<span style="font-size:13px;color:var(--muted);font-style:italic">Nog geen dagen geselecteerd</span>';
+}
+function removeDay(k,type){
+  if(type==='maybe')maybeDays.delete(k);else selectedDays.delete(k);
+  renderCalendar();renderTags();
+}
+async function saveDates(){
+  if(!currentName||!currentEvent)return;
+  const spinner=document.getElementById('save-spinner');const errEl=document.getElementById('save-error');const btn=document.getElementById('btn-save');
+  errEl.classList.add('hidden');spinner.classList.remove('hidden');btn.disabled=true;
+  try{
+    const existing=await sb('/responses?event_id=eq.'+currentEvent.id+'&participant_name=eq.'+encodeURIComponent(currentName));
+    if(existing&&existing.length)await sb('/responses?event_id=eq.'+currentEvent.id+'&participant_name=eq.'+encodeURIComponent(currentName),'DELETE');
+    await sb('/responses','POST',{event_id:currentEvent.id,participant_name:currentName,available_dates:Array.from(selectedDays).sort(),maybe_dates:Array.from(maybeDays).sort()});
+    saveToHistory(currentEvent,isOrganizer?'organizer':'participant',currentName);
+    saveSession(currentEvent,currentName,isOrganizer);
+    await loadResults();showView('view-results');
+  }catch(e){errEl.textContent='Fout: '+e.message;errEl.classList.remove('hidden');}
+  spinner.classList.add('hidden');btn.disabled=false;
+}
+async function viewResults(){if(!currentEvent)return;await loadResults();showView('view-results');}
+async function refreshResults(){if(!currentEvent)return;await loadResults();}
+async function loadResults(){
+  const[ev]=await sb('/events?id=eq.'+currentEvent.id+'&select=*');if(ev)currentEvent=ev;
+  allResponses=await sb('/responses?event_id=eq.'+currentEvent.id+'&select=participant_name,available_dates,maybe_dates');
+  document.getElementById('results-title').textContent=currentEvent.name+' 🏆';
+  const pEl=document.getElementById('results-participants');
+  pEl.innerHTML=allResponses.map((r,i)=>{const c=COLORS[i%COLORS.length];return`<div class="chip"><div class="avatar-sm" style="background:${c.bg};color:${c.text}">${initials(r.participant_name)}</div>${r.participant_name}</div>`;}).join('')||'<p class="notice">Nog niemand ingevuld.</p>';
+  const bw=document.getElementById('confirmed-banner-wrap');
+  if(currentEvent.confirmed_date){
+    const cd=currentEvent.confirmed_date;
+    bw.innerHTML=`<div class="confirmed-banner">🎉 <div><div style="font-size:13px;color:var(--muted);font-weight:700">Bevestigde datum</div><div class="cb-date">${new Date(cd+'T12:00:00').toLocaleDateString('nl-BE',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div></div><div class="export-btns"><button class="btn btn-sm btn-teal" onclick="exportGcal('${cd}')">Google Cal 📅</button><button class="btn btn-sm btn-teal" onclick="exportIcal('${cd}')">iCal 📥</button></div></div>`;
+    if(!bw.dataset.confettied){bw.dataset.confettied='1';launchConfetti();}
+  }else{bw.innerHTML='';}
+  const cs=document.getElementById('confirm-section');
+  const delBtn=document.getElementById('btn-delete-results');
+  if(isOrganizer){cs.classList.remove('hidden');renderConfirmDateList();delBtn.classList.remove('hidden');}
+  else{cs.classList.add('hidden');delBtn.classList.add('hidden');}
+  showRanking(1,document.querySelector('.rtab'));
+}
+function renderConfirmDateList(){
+  const total=allResponses.length;if(!total)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const pStart=parseDate(currentEvent.start_date);const pEnd=parseDate(currentEvent.end_date);
+  let dates=[];let cur=new Date(pStart);
+  while(cur<=pEnd){if(cur>=today)dates.push(toKey(cur));cur=new Date(cur);cur.setDate(cur.getDate()+1);}
+  const scored=dates.map(d=>({key:d,count:totalCount(d)})).sort((a,b)=>b.count-a.count).slice(0,10);
+  const list=document.getElementById('confirm-date-list');
+  list.innerHTML=scored.map(s=>`<button class="confirm-date-btn${currentEvent.confirmed_date===s.key?' active':''}" onclick="selectConfirmDate('${s.key}',this)">${fmtDateLong(s.key)} <span style="opacity:.6;font-size:12px">${s.count}/${total}</span></button>`).join('');
+  selectedConfirmDate=currentEvent.confirmed_date||null;
+}
+function selectConfirmDate(key,el){selectedConfirmDate=key;document.querySelectorAll('.confirm-date-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+async function confirmDate(){
+  if(!selectedConfirmDate||!currentEvent)return;
+  try{await sb('/events?id=eq.'+currentEvent.id,'PATCH',{confirmed_date:selectedConfirmDate});currentEvent.confirmed_date=selectedConfirmDate;await loadResults();}
+  catch(e){alert('Fout: '+e.message);}
+}
+async function clearConfirmed(){
+  try{await sb('/events?id=eq.'+currentEvent.id,'PATCH',{confirmed_date:null});currentEvent.confirmed_date=null;document.getElementById('confirmed-banner-wrap').dataset.confettied='';await loadResults();}
+  catch(e){alert('Fout: '+e.message);}
+}
+function exportGcal(dateStr){const ev=currentEvent;const d=dateStr.replace(/-/g,'');const next=toKey(new Date(new Date(dateStr+'T00:00:00').getTime()+86400000)).replace(/-/g,'');window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.name)}&dates=${d}/${next}&details=${encodeURIComponent('Gepland via PrikDate.app 🌴')}`,'_blank');}
+function exportIcal(dateStr){const ev=currentEvent;const d=dateStr.replace(/-/g,'');const next=toKey(new Date(new Date(dateStr+'T00:00:00').getTime()+86400000)).replace(/-/g,'');const ical=`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART;VALUE=DATE:${d}\nDTEND;VALUE=DATE:${next}\nSUMMARY:${ev.name}\nDESCRIPTION:Gepland via PrikDate.app\nEND:VEVENT\nEND:VCALENDAR`;const blob=new Blob([ical],{type:'text/calendar'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=ev.name+'.ics';a.click();}
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const pieces=Array.from({length:150},()=>({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,r:Math.random()*7+4,c:`hsl(${Math.random()*60+15},90%,60%)`,s:Math.random()*3+2,a:Math.random()*Math.PI*2,d:Math.random()*2-1}));
+  let frame=0;
+  function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);ctx.restore();p.y+=p.s;p.x+=p.d;p.a+=.05;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}});frame++;if(frame<220)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);}
+  draw();
+}
+function showRanking(n,btn){
+  document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');
+  const total=allResponses.length;const list=document.getElementById('rank-list');
+  if(!total){list.innerHTML='<li style="padding:1rem 0;color:var(--muted);font-size:14px">Nog niemand heeft beschikbaarheid ingevuld.</li>';return;}
+  const today=new Date();today.setHours(0,0,0,0);
+  const pStart=parseDate(currentEvent.start_date);const pEnd=parseDate(currentEvent.end_date);
+  let dates=[];let cur=new Date(pStart);
+  while(cur<=pEnd){if(cur>=today)dates.push(toKey(cur));cur=new Date(cur);cur.setDate(cur.getDate()+1);}
+  let results=[];
+  if(n===1){results=dates.map(d=>{const names=allResponses.filter(r=>r.available_dates&&r.available_dates.includes(d)).map(r=>r.participant_name);return{label:fmtDate(d),key:d,count:names.length,names};});}
+  else{for(let i=0;i<=dates.length-n;i++){const chunk=dates.slice(i,i+n);if(!chunk.every((d,j)=>j===0||isNext(chunk[j-1],d)))continue;const names=allResponses.filter(r=>r.available_dates&&chunk.every(d=>r.available_dates.includes(d))).map(r=>r.participant_name);results.push({label:fmtDate(chunk[0])+' – '+fmtDate(chunk[chunk.length-1]),key:chunk[0],count:names.length,names});}}
+  results.sort((a,b)=>b.count-a.count);
+  const top=results.slice(0,6);const maxC=top[0]?.count||1;
+  if(!top.length){list.innerHTML='<li style="padding:1rem 0;color:var(--muted);font-size:14px">Geen periode gevonden.</li>';return;}
+  list.innerHTML=top.map((r,i)=>{
+    const pct=Math.round((r.count/total)*100);const barW=Math.round((r.count/maxC)*100);
+    const isConf=currentEvent.confirmed_date&&r.key===currentEvent.confirmed_date;
+    const avs=r.names.map(name=>{const ci=allResponses.findIndex(x=>x.participant_name===name)%COLORS.length;const c=COLORS[ci<0?0:ci];return`<div style="width:26px;height:26px;border-radius:50%;background:${c.bg};color:${c.text};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;border:2px solid #fff" title="${name}">${initials(name)}</div>`;}).join('');
+    return`<li class="rank-item"${isConf?' style="background:#E0FFF8;border-radius:12px;padding:14px 10px;"':''}>
+      <span class="rank-num${i===0?' gold':''}">${i+1}</span>
+      <div class="rank-info">
+        <div class="rank-date">${r.label}${isConf?' <span style="font-size:11px;background:var(--teal);color:#fff;border-radius:99px;padding:2px 9px;margin-left:6px;font-weight:800">✓ Bevestigd</span>':''}</div>
+        <div class="bar-wrap"><div class="bar" style="width:${barW}%"></div></div>
+        <div class="rank-avatars">${avs||'<span style="font-size:12px;color:var(--muted)">Niemand</span>'}</div>
+      </div>
+      <div class="rank-right"><div class="rank-pct">${pct}%</div><div class="rank-sub">${r.count}/${total}</div></div>
+    </li>`;
+  }).join('');
+}
+function goToHeatmap(){if(!currentEvent)return;document.getElementById('heatmap-title').textContent=currentEvent.name+' 🌡️';renderHeatmapMonths();showView('view-heatmap');}
+function renderHeatmapMonths(){
+  const pStart=parseDate(currentEvent.start_date);const pEnd=parseDate(currentEvent.end_date);
+  const total=allResponses.length;let months=[];let cur=new Date(pStart.getFullYear(),pStart.getMonth(),1);
+  while(cur<=pEnd){months.push({y:cur.getFullYear(),m:cur.getMonth()});cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);}
+  const allD=getAllDates(pStart,pEnd);const maxCount=Math.max(...allD.map(d=>totalCount(d)),1);
+  let html='';
+  for(const{y,m} of months){
+    html+=`<div style="margin-bottom:1.5rem"><p style="font-size:1rem;font-weight:800;margin-bottom:.75rem">☀️ ${MONTHS[m]} ${y}</p><div class="cal-grid"><div class="cal-hdr">Ma</div><div class="cal-hdr">Di</div><div class="cal-hdr">Wo</div><div class="cal-hdr">Do</div><div class="cal-hdr">Vr</div><div class="cal-hdr">Za</div><div class="cal-hdr">Zo</div>`;
+    let dow=new Date(y,m,1).getDay();dow=dow===0?6:dow-1;
+    for(let i=0;i<dow;i++)html+=`<div class="day empty"></div>`;
+    const dim=new Date(y,m+1,0).getDate();const today=new Date();today.setHours(0,0,0,0);
+    for(let d=1;d<=dim;d++){
+      const dt=new Date(y,m,d);const key=toKey(dt);
+      const inRange=dt>=pStart&&dt<=pEnd;const isPast=dt<today;
+      const count=inRange&&!isPast?totalCount(key):0;
+      const isConf=currentEvent.confirmed_date===key;
+      let cls='day'+(inRange?'':' out-range')+(isPast&&inRange?' past':'');
+      if(isConf)cls+=' confirmed-day';else if(count>0)cls+=' '+heatClass(count,maxCount);
+      const names=count>0?allResponses.filter(r=>r.available_dates&&r.available_dates.includes(key)).map(r=>r.participant_name).join(', '):'';
+      html+=`<div class="${cls}" onclick="showDayTooltip('${key}','${esc(names)}',${count},${allResponses.length})"><span>${d}</span>${count>0&&inRange&&!isPast?`<div class="heat-count">${count}×</div>`:''}</div>`;
+    }
+    html+=`</div></div>`;
+  }
+  document.getElementById('heatmap-months').innerHTML=html;
+}
+function getAllDates(start,end){const d=[];let c=new Date(start);while(c<=end){d.push(toKey(c));c=new Date(c);c.setDate(c.getDate()+1);}return d;}
+function showDayTooltip(key,names,count,total){
+  if(!count)return;const ex=document.getElementById('day-tooltip');if(ex)ex.remove();
+  const dateStr=new Date(key+'T12:00:00').toLocaleDateString('nl-BE',{weekday:'long',day:'numeric',month:'long'});
+  const div=document.createElement('div');div.id='day-tooltip';
+  div.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#fff;border:2px solid var(--border);color:var(--text);border-radius:14px;padding:12px 18px;font-size:13px;font-weight:700;z-index:9998;max-width:90vw;text-align:center;box-shadow:0 6px 24px #FFB83040;';
+  div.innerHTML=`<strong>${dateStr}</strong><br>☀️ ${count}/${total} beschikbaar${names?'<br><span style="font-weight:600;color:var(--muted)">'+names+'</span>':''}`;
+  document.body.appendChild(div);setTimeout(()=>div.remove(),3000);
+}
+function parseDate(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function toKey(dt){const y=dt.getFullYear();const m=String(dt.getMonth()+1).padStart(2,'0');const d=String(dt.getDate()).padStart(2,'0');return`${y}-${m}-${d}`;}
+function fmtDate(k){return new Date(k+'T12:00:00').toLocaleDateString('nl-BE',{day:'numeric',month:'short'});}
+function fmtDateLong(k){return new Date(k+'T12:00:00').toLocaleDateString('nl-BE',{weekday:'short',day:'numeric',month:'short'});}
+function isNext(a,b){return(new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))===86400000;}
+function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+
+(async function init(){
+  const eid=new URLSearchParams(window.location.search).get('event');
+  if(eid){
+    try{const[ev]=await sb('/events?id=eq.'+eid+'&select=*');if(ev){currentEvent=ev;const sess=loadSession();if(sess&&sess.eventId===ev.id&&sess.organizer){currentName=sess.name;isOrganizer=true;}startFillIn();}}catch(e){}
+  }else{
+    const sess=loadSession();
+    if(sess){
+      try{
+        const[ev]=await sb('/events?id=eq.'+sess.eventId+'&select=*');
+        if(ev){currentEvent=ev;currentName=sess.name;isOrganizer=sess.organizer;
+          if(ev.theme)applyTheme(ev.theme);
+          if(isOrganizer){setShareLink();showView('view-created');}
+          else{await loadResults();showView('view-results');}return;
+        }
+      }catch(e){}
+    }
+    renderDashboard();
+  }
+})();
+
+// ---- DESTINATION POLL ----
+let destVotes=[];
+
+async function goToPoll(){
+  if(!currentEvent)return;
+  document.getElementById('poll-title').textContent=currentEvent.name+' — Bestemming 🌍';
+  const addSec=document.getElementById('poll-add-section');
+  if(isOrganizer)addSec.classList.remove('hidden');else addSec.classList.add('hidden');
+  await loadPoll();
+  showView('view-poll');
+}
+
+async function loadPoll(){
+  try{
+    const[ev]=await sb('/events?id=eq.'+currentEvent.id+'&select=destinations');
+    const dests=ev&&ev.destinations?ev.destinations:[];
+    destVotes=await sb('/destination_votes?event_id=eq.'+currentEvent.id+'&select=participant_name,destination');
+    const myVote=destVotes.find(v=>v.participant_name===currentName);
+    const total=new Set(destVotes.map(v=>v.participant_name)).size;
+    const list=document.getElementById('dest-list');
+    if(!dests.length){list.innerHTML='<p class="notice">Nog geen bestemmingen toegevoegd.</p>';return;}
+    list.innerHTML=dests.map(dest=>{
+      const count=destVotes.filter(v=>v.destination===dest).length;
+      const pct=total>0?Math.round((count/total)*100):0;
+      const isMyVote=myVote&&myVote.destination===dest;
+      return`<div class="dest-card${isMyVote?' voted':''}" onclick="voteDestination('${esc(dest)}')">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-weight:800;font-size:15px;">${esc(dest)}</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${isMyVote?'<span style="font-size:12px;font-weight:800;color:var(--accent)">✓ Jouw stem</span>':''}
+            <span style="font-size:13px;font-weight:700;color:var(--muted)">${count} stem${count!==1?'men':''}</span>
+          </div>
+        </div>
+        <div class="dest-bar-wrap"><div class="dest-bar" style="width:${pct}%"></div></div>
+        ${isOrganizer?`<button class="btn btn-danger btn-sm" style="margin-top:6px;font-size:11px" onclick="removeDestination(event,'${esc(dest)}')">🗑 Verwijder</button>`:''}
+      </div>`;
+    }).join('');
+    const msg=document.getElementById('poll-voted-msg');
+    if(myVote)msg.textContent='✅ Je hebt gestemd op: '+myVote.destination;
+    else msg.textContent='👆 Tik op een bestemming om te stemmen!';
+    document.getElementById('poll-vote-section').classList.remove('hidden');
+  }catch(e){console.error(e);}
+}
+
+async function addDestination(){
+  const inp=document.getElementById('dest-input');
+  const val=inp.value.trim();
+  if(!val)return;
+  try{
+    const[ev]=await sb('/events?id=eq.'+currentEvent.id+'&select=destinations');
+    const dests=ev&&ev.destinations?ev.destinations:[];
+    if(dests.includes(val)){document.getElementById('dest-error').textContent='Al toegevoegd!';document.getElementById('dest-error').style.display='block';return;}
+    await sb('/events?id=eq.'+currentEvent.id,'PATCH',{destinations:[...dests,val]});
+    inp.value='';document.getElementById('dest-error').style.display='none';
+    await loadPoll();
+  }catch(e){alert('Fout: '+e.message);}
+}
+
+async function removeDestination(e,dest){
+  e.stopPropagation();
+  try{
+    const[ev]=await sb('/events?id=eq.'+currentEvent.id+'&select=destinations');
+    const dests=(ev&&ev.destinations?ev.destinations:[]).filter(d=>d!==dest);
+    await sb('/events?id=eq.'+currentEvent.id,'PATCH',{destinations:dests});
+    await sb('/destination_votes?event_id=eq.'+currentEvent.id+'&destination=eq.'+encodeURIComponent(dest),'DELETE');
+    await loadPoll();
+  }catch(e){alert('Fout: '+e.message);}
+}
+
+async function voteDestination(dest){
+  if(!currentName){alert('Vul eerst je naam in via "Nog iemand toevoegen".');return;}
+  try{
+    // Remove old vote
+    await sb('/destination_votes?event_id=eq.'+currentEvent.id+'&participant_name=eq.'+encodeURIComponent(currentName),'DELETE');
+    // Add new vote
+    await sb('/destination_votes','POST',{event_id:currentEvent.id,participant_name:currentName,destination:dest});
+    await loadPoll();
+  }catch(e){alert('Fout: '+e.message);}
+}
+</script>
+</body>
+</html>
